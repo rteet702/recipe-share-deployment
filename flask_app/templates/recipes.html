@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Share | All Recipes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- top-bar with title -->
+        <div class="row my-5">
+            <h1 class="fw-bold">Welcome, {{ user.first_name }}</h1>
+        </div>
+        <!-- bar with logout and table name -->
+        <div class="row my-3">
+            <div class="col-10">
+                <p>All created recipes:</p>
+            </div>
+            <div class="col d-flex justify-content-between">
+                <p><a href="/recipes/create">Create +</a></p>
+                <p><a href="/logout">Logout</a></p>
+            </div>
+        </div>
+        <!-- table with recipes -->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Under 30?</th>
+                    <th scope="col">Posted By</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user_with_recipes in uwr: %}
+                {% for recipe in user_with_recipes.recipes %}
+                <tr>
+                    <td>{{ recipe.name }}</td>
+                    <td>
+                        {% if recipe.under_30 == 0 %}
+                        No
+                        {% else %}
+                        Yes
+                        {% endif %}
+                    </td>
+                    <td>{{ user_with_recipes.first_name }}</td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Basic button group">
+                            <a class="btn btn-primary" href="/recipes/{{ recipe.id }}">View Recipe</a>
+                            {% if user_with_recipes.id == user.id: %}
+                            <a class="btn btn-success" href="/recipes/{{ recipe.id }}/edit">Edit</a>
+                            <a class="btn btn-danger" href="/recipes/{{ recipe.id }}/delete">Delete</a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
